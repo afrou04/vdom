@@ -3,7 +3,7 @@
 
 /**
  * @typedef {{id: string}& {[key: string]: string}} ATTRIVUTE
- * @typedef {{tagName: string, content: string, attributes: ATTRIVUTE, children: Array<VDOM>}} VDOM
+ * @typedef {{tagName: string, content: string, attributes: ATTRIVUTE, children?: Array<VDOM>}} VDOM
  */
 
 /** 
@@ -36,7 +36,6 @@ const vNode = genVNode("p", { id: "p-1" }, [
  * @param HTMLElement elm
  */
 const render = (element) => {
-  console.log('render', document.body)
   document.body.appendChild(element)
 }
 
@@ -45,21 +44,14 @@ const render = (element) => {
  * @param {VDOM} vdom
  */
 const convertElement = (vdom) => {
-  console.log('vdom', vdom)
   const element = document.createElement(vdom.tagName)
   for (const key in vNode.attributes) {
-    console.log('attributes', {
-      key,
-      val: vNode.attributes[key],
-    })
     element.setAttribute(key, vNode.attributes[key])
   }
 
-  vdom.children.forEach((child) => {
-    console.log('child', child)
+  vdom.children && vdom.children.forEach((child) => {
     if (child.tagName === 'text') {
       element.innerText = child.attributes["content"]
-      return
     }
     element.appendChild(convertElement(child))
   })
